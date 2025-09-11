@@ -111,15 +111,3 @@ export class LicredityActionsBuilder<
     });
   }
 }
-
-// const params = LicredityActionsBuilder.fromArray([
-//   {
-//     name: "increaseDebtAmount",
-//     args: ["0xa9fEDe90B4A41E62d4953b33e4D76CcA3a020b5F", 1000n],
-//   },
-// ])
-//   .encode()
-//   .toCalldata();
-
-// // console.log(actions);
-// console.log(params);
