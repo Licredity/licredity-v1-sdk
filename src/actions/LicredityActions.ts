@@ -35,7 +35,7 @@ export type LicredityActionParameters<
 
 const LicredityActionType = {
   depositFungible: 0x00,
-  depsoitNonFungible: 0x01,
+  depositNonFungible: 0x01,
   withdrawFungible: 0x02,
   withdrawNonFungible: 0x03,
   increaseDebtAmount: 0x04,

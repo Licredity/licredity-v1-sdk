@@ -1,6 +1,6 @@
 export const LicredityActionAbi = [
   {
-    name: "depsoitFungible",
+    name: "depositFungible",
     type: "function",
     stateMutability: "pure",
     inputs: [
@@ -11,7 +11,7 @@ export const LicredityActionAbi = [
     outputs: [],
   },
   {
-    name: "depsoitNonFungible",
+    name: "depositNonFungible",
     type: "function",
     stateMutability: "pure",
     inputs: [
