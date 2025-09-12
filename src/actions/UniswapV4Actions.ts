@@ -9,9 +9,10 @@ import {
   type Hex,
   getAbiItem,
   encodeAbiParameters,
+  type Address,
 } from "viem";
 import { UniswapV4PoolManagerAbi } from "../abis/UniswapV4PoolManager";
-import { BaseActions } from "./BaseActions";
+import { ActionConstants, BaseActions } from "./BaseActions";
 
 const UniswapV4PoolActions = {
   swap: 0x0d,
@@ -19,6 +20,14 @@ const UniswapV4PoolActions = {
   settle: 0x0f,
   sweep: 0x10,
 } as const;
+
+export type PoolKey = {
+  currency0: Address;
+  currency1: Address;
+  fee: number;
+  tickSpacing: number;
+  hooks: Address;
+};
 
 export type UniswapV4ActionParameters<
   abi extends Abi = typeof UniswapV4PoolManagerAbi,
@@ -77,6 +86,22 @@ export class UniswapV4ActionsBuilder<
     this.items.push(config);
   }
 
+  finalizeSwap(
+    inputCurrency: Address,
+    outputCurrency: Address,
+    swapRecipient: Address,
+    payIsUser: Boolean,
+  ) {
+    this.addAction({
+      name: "settle",
+      args: [inputCurrency, ActionConstants.OPEN_DELTA, payIsUser],
+    } as UniswapV4ActionParameters<abi, functionName, args>);
+    this.addAction({
+      name: "take",
+      args: [outputCurrency, swapRecipient, ActionConstants.OPEN_DELTA],
+    } as UniswapV4ActionParameters<abi, functionName, args>);
+  }
+
   encode() {
     const actions: Array<number> = [];
     const params: Array<Hex> = [];
@@ -101,29 +126,3 @@ export class UniswapV4ActionsBuilder<
     });
   }
 }
-
-const params = UniswapV4ActionsBuilder.fromArray([
-  {
-    name: "swap",
-    args: [
-      {
-        currency0: "0xA4f65241CBC09188C60908AAF083e12C54E6d898",
-        currency1: "0xA4f65241CBC09188C60908AAF083e12C54E6d898",
-        fee: 1,
-        tickSpacing: 1,
-        hooks: "0x1e5FF53314E5460ad6Bd0F7DAf05FB4021Afa788",
-      },
-      {
-        zeroForOne: true,
-        amountSpecified: -1000n,
-        sqrtPriceLimitX96: 1n,
-      },
-      "0x",
-    ],
-  },
-])
-  .encode()
-  .toCalldata();
-
-// console.log(actions);
-console.log(params);
