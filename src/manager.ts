@@ -38,10 +38,10 @@ export class LicredityPositionManager {
     this.chain = client.chain!;
   }
 
-  execute(inputs: ExecuteInput[]) {
+  async execute(inputs: ExecuteInput[]) {
     const deadline = BigInt(Math.floor(Date.now() / 1000) + this.deadSeconds);
 
-    this.contract.write.execute([inputs, deadline], {
+    await this.contract.write.execute([inputs, deadline], {
       account: this.owner,
       chain: this.chain,
     });
