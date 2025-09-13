@@ -2,25 +2,51 @@ import {
   erc20Abi,
   getContract,
   publicActions,
-  type Account,
   type Address,
   type Chain,
+  type Hex,
   type PublicClient,
   type WalletClient,
 } from "viem";
 import { LicredityPositionManagerAbi } from "./abis/LicredityPositionManager";
-import { bsc } from "viem/chains";
+import type { LicredityActionsBuilder } from "./actions/LicredityActions";
 
-// export class LicredityPositionManager {
-//   contract;
-//   constructor(manager: Address, client: PublicClient) {
-//     this.contract = getContract({
-//       address: manager,
-//       abi: LicredityPositionManagerAbi,
-//       client,
-//     });
-//   }
-// }
+type ExecuteInput = {
+  tokenId: bigint;
+  unlockData: Hex;
+};
+
+export class LicredityPositionManager {
+  contract;
+  deadSeconds: number;
+  owner: Address;
+  chain: Chain;
+
+  constructor(
+    account: Address,
+    manager: Address,
+    client: PublicClient,
+    deadSeconds: number,
+  ) {
+    this.contract = getContract({
+      address: manager,
+      abi: LicredityPositionManagerAbi,
+      client,
+    });
+    this.deadSeconds = deadSeconds;
+    this.owner = account;
+    this.chain = client.chain!;
+  }
+
+  execute(inputs: ExecuteInput[]) {
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + this.deadSeconds);
+
+    this.contract.write.execute([inputs, deadline], {
+      account: this.owner,
+      chain: this.chain,
+    });
+  }
+}
 
 export class LicredityPosition {
   manager;
@@ -97,5 +123,12 @@ export class LicredityPosition {
         chain: this.chain,
       });
     }
+  }
+
+  wirte(actions: LicredityActionsBuilder): ExecuteInput {
+    return {
+      tokenId: this.tokenId,
+      unlockData: actions.encode().toCalldata(),
+    };
   }
 }
