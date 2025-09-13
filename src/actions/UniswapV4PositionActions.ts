@@ -56,25 +56,10 @@ export type UniswapV4PositionManagerActionParameters<
 
 export class UniswapV4PositionManagerActionsBuilder<
   const abi extends Abi = typeof UniswapV4PositionManagerAbi,
-  functionName extends ContractFunctionName<
-    abi,
-    "pure" | "nonpayable"
-  > = ContractFunctionName<abi, "pure" | "nonpayable">,
-  const args extends ContractFunctionArgs<
-    abi,
-    "pure" | "nonpayable",
-    functionName
-  > = ContractFunctionArgs<abi, "pure" | "nonpayable", functionName>,
 > {
-  private items: UniswapV4PositionManagerActionParameters<
-    abi,
-    functionName,
-    args
-  >[] = [];
+  private items: any[] = [];
 
-  constructor(
-    items: UniswapV4PositionManagerActionParameters<abi, functionName, args>[],
-  ) {
+  private constructor(items: any[]) {
     this.items = items;
   }
 
@@ -95,9 +80,17 @@ export class UniswapV4PositionManagerActionsBuilder<
     return new UniswapV4PositionManagerActionsBuilder(items);
   }
 
-  addAction(
-    config: UniswapV4PositionManagerActionParameters<abi, functionName, args>,
-  ) {
+  addAction<
+    functionName extends ContractFunctionName<
+      abi,
+      "pure" | "nonpayable"
+    > = ContractFunctionName<abi, "pure" | "nonpayable">,
+    args extends ContractFunctionArgs<
+      abi,
+      "pure" | "nonpayable",
+      functionName
+    > = ContractFunctionArgs<abi, "pure" | "nonpayable", functionName>,
+  >(config: UniswapV4PositionManagerActionParameters<abi, functionName, args>) {
     this.items.push(config);
   }
 

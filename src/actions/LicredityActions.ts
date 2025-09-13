@@ -52,19 +52,10 @@ const LicredityActionType = {
 
 export class LicredityActionsBuilder<
   const abi extends Abi = typeof LicredityActionAbi,
-  functionName extends ContractFunctionName<
-    abi,
-    "pure" | "view"
-  > = ContractFunctionName<abi, "pure" | "view">,
-  const args extends ContractFunctionArgs<
-    abi,
-    "pure" | "view",
-    functionName
-  > = ContractFunctionArgs<abi, "pure" | "view", functionName>,
 > {
-  private items: LicredityActionParameters<abi, functionName, args>[] = [];
+  private items: any[] = [];
 
-  constructor(items: LicredityActionParameters<abi, functionName, args>[]) {
+  private constructor(items: any[]) {
     this.items = items;
   }
 
@@ -83,7 +74,17 @@ export class LicredityActionsBuilder<
     return new LicredityActionsBuilder(items);
   }
 
-  addAction(config: LicredityActionParameters<abi, functionName, args>) {
+  addAction<
+    functionName extends ContractFunctionName<
+      abi,
+      "pure" | "view"
+    > = ContractFunctionName<abi, "pure" | "view">,
+    args extends ContractFunctionArgs<
+      abi,
+      "pure" | "view",
+      functionName
+    > = ContractFunctionArgs<abi, "pure" | "view", functionName>,
+  >(config: LicredityActionParameters<abi, functionName, args>) {
     this.items.push(config);
   }
 

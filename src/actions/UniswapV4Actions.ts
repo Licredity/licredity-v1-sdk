@@ -51,19 +51,10 @@ export type UniswapV4ActionParameters<
 
 export class UniswapV4ActionsBuilder<
   const abi extends Abi = typeof UniswapV4PoolManagerAbi,
-  functionName extends ContractFunctionName<
-    abi,
-    "pure" | "nonpayable"
-  > = ContractFunctionName<abi, "pure" | "nonpayable">,
-  const args extends ContractFunctionArgs<
-    abi,
-    "pure" | "nonpayable",
-    functionName
-  > = ContractFunctionArgs<abi, "pure" | "nonpayable", functionName>,
 > {
-  private items: UniswapV4ActionParameters<abi, functionName, args>[] = [];
+  private items: any[] = [];
 
-  constructor(items: UniswapV4ActionParameters<abi, functionName, args>[]) {
+  private constructor(items: any[]) {
     this.items = items;
   }
 
@@ -82,7 +73,17 @@ export class UniswapV4ActionsBuilder<
     return new UniswapV4ActionsBuilder(items);
   }
 
-  addAction(config: UniswapV4ActionParameters<abi, functionName, args>) {
+  addAction<
+    functionName extends ContractFunctionName<
+      abi,
+      "pure" | "nonpayable"
+    > = ContractFunctionName<abi, "pure" | "nonpayable">,
+    const args extends ContractFunctionArgs<
+      abi,
+      "pure" | "nonpayable",
+      functionName
+    > = ContractFunctionArgs<abi, "pure" | "nonpayable", functionName>,
+  >(config: UniswapV4ActionParameters<abi, functionName, args>) {
     this.items.push(config);
   }
 
@@ -95,11 +96,11 @@ export class UniswapV4ActionsBuilder<
     this.addAction({
       name: "settle",
       args: [inputCurrency, ActionConstants.OPEN_DELTA, payIsUser],
-    } as UniswapV4ActionParameters<abi, functionName, args>);
+    } as any);
     this.addAction({
       name: "take",
       args: [outputCurrency, swapRecipient, ActionConstants.OPEN_DELTA],
-    } as UniswapV4ActionParameters<abi, functionName, args>);
+    } as any);
   }
 
   encode() {
