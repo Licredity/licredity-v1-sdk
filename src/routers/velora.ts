@@ -72,5 +72,5 @@ export const veloraSwap = async (
 
   const body = (await response.json()) as ParaSwapReturn;
 
-  return body.txParams;
+  return body;
 };

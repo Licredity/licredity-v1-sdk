@@ -1,5 +1,5 @@
 import type { Address } from "abitype";
-import { parseUnits, type Chain, type PublicClient } from "viem";
+import { parseUnits, type Chain, type Hex, type PublicClient } from "viem";
 import { getTokenDecimals } from "./base";
 
 const BASE_URL = "https://api.odos.xyz/sor";
@@ -14,7 +14,17 @@ type odosQuoteReturn = {
   pathId: string;
 };
 
-export const quote = async (
+type odosSwapReturn = {
+  blockNumber: number;
+  transaction: {
+    value: string;
+    to: Address;
+    from: Address;
+    data: Hex;
+  };
+};
+
+export const odosQuote = async (
   config: {
     userAddress: Address;
     srcTokenAddr: Address;
@@ -59,7 +69,7 @@ export const quote = async (
   return data;
 };
 
-export const swap = async (
+export const odosSwap = async (
   pathId: string,
   userAddress: Address,
   receiver: Address,
@@ -76,6 +86,7 @@ export const swap = async (
     body: JSON.stringify(assembleParams),
   });
 
-  const data = await reponse.json();
-  console.log(JSON.stringify(data));
+  const data = (await reponse.json()) as odosSwapReturn;
+
+  return data;
 };
