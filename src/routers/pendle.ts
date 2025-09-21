@@ -43,7 +43,7 @@ export const getAggregators = async (chain: Chain) => {
   return aggregators;
 };
 
-export const swap = async (
+export const pendleSwap = async (
   config: {
     userAddress: Address;
     srcTokenAddr: Address;
@@ -61,8 +61,6 @@ export const swap = async (
   const aggregatorsFormat = (aggregators as string[]).reduce((acc, cur) =>
     acc.concat(",").concat(cur),
   );
-
-  console.log(aggregatorsFormat);
 
   const params = new URLSearchParams({
     chainId: config.network.id.toString(),
