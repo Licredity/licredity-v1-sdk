@@ -24,14 +24,14 @@ export interface ParaSwapReturn {
 }
 
 // amount: srcToken amount (in case of SELL) or destToken amount (in case of BUY).
-export const swap = async (
+export const veloraSwap = async (
   config: {
     userAddress: Address;
     srcTokenAddr: Address;
     destTokenAddr: Address;
     amount: string;
     network: Chain;
-    side: "destToSrc" | "srcToDest";
+    side: "exactIn" | "exactOut";
     slippage: number;
   },
   client: PublicClient,
@@ -42,7 +42,7 @@ export const swap = async (
   let parsedAmount = 0n;
   let parseSide: "SELL" | "BUY";
 
-  if (config.side === "destToSrc") {
+  if (config.side === "exactOut") {
     parsedAmount = parseUnits(config.amount, destDecimals);
     parseSide = "BUY";
   } else {
