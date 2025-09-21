@@ -21,9 +21,7 @@ const ptcUSDO: Address = "0xB10DA2F9147f9cf2B8826877Cd0c95c18A0f42dc";
 
 const client = createPublicClient({
   chain: mainnet,
-  transport: http(
-    "https://lb.drpc.org/ethereum/AiSeBJmZXE_6kt2BJkfeiBCua7jhAXkR75ZOngOF84-p",
-  ),
+  transport: http(process.env.RPC_URL),
 });
 
 const paraswapNativeReturn = await veloraSwap(
